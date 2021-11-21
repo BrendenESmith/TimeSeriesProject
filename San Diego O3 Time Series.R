@@ -2,6 +2,11 @@
 
 library("fpp2")
 library("dplyr")
+library("GGally")
+
+ggpairs(as.data.frame(SanDiego.ts[,3:5]))
+
+
 setwd("C:/Users/bsmith11/OneDrive/Documents/Babson/Time Series and Forecasting/Project")
 SanDiego <- read.csv("San Diego Data.csv")
 
@@ -85,9 +90,9 @@ prednaive <- naive(SanDiego.ts,135)
 preddrift <- rwf(SanDiego.ts,135)
 predsn <- snaive(SanDiego.ts,135)
 predavg <- meanf(SanDiego.ts,135)
-predSEs <- ses(SanDiego.ts,135)
-predSES0.1 <- ses(SanDiego.ts,135)
-predSES0.3 <- ses(SanDiego.ts,135)
+predSES <- ses(SanDiego.ts,135)
+predSES0.1 <- ses(SanDiego.ts,alpha = 0.1, 135)
+predSES0.3 <- ses(SanDiego.ts,alpha = 0.3, 135)
 predhw <- holt(SanDiego.ts,135)
 #predhwa <- forecast(SanDiego.ts,135)
 #predhwm <- forecast(SanDiego.ts,135)
@@ -106,8 +111,8 @@ autoplot(predsn) +
   # Red curve: fitted data from model
   autolayer(fitted(predsn), series = "Fitted")
 
-autoplot(predSES0.1)
-  + autolayer(fitted(predSES0.1), series = "Fitted")
+autoplot(prednaive)
+  + autolayer(fitted(predS), series = "Fitted")
 
 
 #####
@@ -121,6 +126,9 @@ tail(SanDiegoMeans)
 
 SanDiegoMeans.ts <- ts(SanDiegoMeans, start=c(2005,297), frequency=365)
 SanDiegoMeans.ts
+
+# Scatterplot matrix
+ggpairs(as.data.frame(SanDiegoMeans.ts))
 
 # Displaying correlograms
 ggAcf(SanDiegoMeans.ts[,1], lag = 365) # NO2: Cycle
@@ -171,6 +179,4 @@ New <- data.frame(NO2.Lag = c(7.956522),
 
 predictionsReg1Period <- forecast(Model_lag,New) 
 predictions
-
-
 
